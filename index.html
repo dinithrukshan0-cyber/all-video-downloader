@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Video Downloader</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#101827;
+ color:white;
+ min-height:100vh;
+}
+header{
+ padding:22px;
+ text-align:center;
+ background:#18243a;
+ border-bottom:1px solid #293850;
+}
+.logo{font-size:25px;font-weight:bold}
+.logo span{color:#38a1ff}
+main{
+ max-width:550px;
+ margin:65px auto;
+ padding:20px;
+ text-align:center;
+}
+h1{font-size:32px}
+p{color:#aab8ca;line-height:1.6}
+.panel{
+ background:#1b2940;
+ padding:25px;
+ border-radius:16px;
+ margin-top:30px;
+}
+input{
+ width:100%;
+ padding:16px;
+ border:0;
+ border-radius:9px;
+ font-size:15px;
+ margin-bottom:15px;
+}
+button{
+ width:100%;
+ padding:15px;
+ border:0;
+ border-radius:9px;
+ background:#2388f5;
+ color:white;
+ font-size:16px;
+ font-weight:bold;
+ cursor:pointer;
+}
+video{
+ width:100%;
+ margin-top:20px;
+ border-radius:10px;
+ display:none;
+}
+#download{
+ display:none;
+ margin-top:15px;
+ padding:14px;
+ background:#16a36a;
+ color:white;
+ text-decoration:none;
+ border-radius:9px;
+ display:none;
+}
+.note{font-size:12px;margin-top:25px}
+footer{text-align:center;color:#8090a5;padding:25px}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">ALL VIDEO <span>DOWNLOADER</span></div>
+</header>
+
+<main>
+ <h1>Download Videos Easily</h1>
+ <p>Paste a direct video link to preview and download your video.</p>
+
+ <div class="panel">
+  <input id="url" type="url"
+  placeholder="Paste video URL here...">
+  <button onclick="getVideo()">Analyze Video</button>
+
+  <p id="message"></p>
+  <video id="preview" controls></video>
+  <a id="download" href="#" download="video.mp4">
+  Download Video
+  </a>
+ </div>
+
+ <p class="note">
+ Only use videos you own or have permission to download.
+ </p>
+</main>
+
+<footer>
+© 2026 All Video Downloader
+</footer>
+
+<script>
+function getVideo(){
+ const url=document.getElementById("url").value.trim();
+ const message=document.getElementById("message");
+ const video=document.getElementById("preview");
+ const download=document.getElementById("download");
+
+ video.style.display="none";
+ download.style.display="none";
+
+ if(!url){
+  message.textContent="Please enter a video URL.";
+  return;
+ }
+
+ try{
+  const parsed=new URL(url);
+  if(!["http:","https:"].includes(parsed.protocol)){
+   throw new Error();
+  }
+ }catch(e){
+  message.textContent="Please enter a valid video URL.";
+  return;
+ }
+
+ video.src=url;
+ video.style.display="block";
+ download.href=url;
+ download.style.display="block";
+ message.textContent="Video link added. Preview or try downloading.";
+}
+</script>
+</body>
+</html>
