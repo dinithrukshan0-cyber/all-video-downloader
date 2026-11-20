@@ -10,98 +10,148 @@
 body{
  margin:0;
  font-family:Arial,sans-serif;
- background:#101827;
- color:white;
- min-height:100vh;
+ background:#0b1120;
+ color:#fff;
 }
 header{
- padding:22px;
- text-align:center;
- background:#18243a;
- border-bottom:1px solid #293850;
+ padding:20px;
+ background:#111c31;
+ border-bottom:1px solid #26344d;
 }
-.logo{font-size:25px;font-weight:bold}
+nav{
+ max-width:950px;
+ margin:auto;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+.logo{font-size:21px;font-weight:bold}
 .logo span{color:#38a1ff}
-main{
- max-width:550px;
- margin:65px auto;
+.hero{
+ max-width:750px;
+ margin:75px auto 30px;
  padding:20px;
  text-align:center;
 }
-h1{font-size:32px}
+.tag{
+ color:#38a1ff;
+ font-size:13px;
+ font-weight:bold;
+}
+h1{font-size:38px;margin:18px 0}
+h1 span{color:#38a1ff}
 p{color:#aab8ca;line-height:1.6}
-.panel{
- background:#1b2940;
+.card{
+ background:#16243b;
+ border:1px solid #2b3c58;
+ border-radius:18px;
  padding:25px;
- border-radius:16px;
- margin-top:30px;
+ margin-top:35px;
 }
 input{
  width:100%;
- padding:16px;
- border:0;
- border-radius:9px;
+ padding:17px;
+ border-radius:10px;
+ border:1px solid #344966;
+ background:#0d182a;
+ color:white;
  font-size:15px;
+ outline:none;
  margin-bottom:15px;
 }
 button{
  width:100%;
- padding:15px;
+ padding:16px;
+ background:#2687f5;
  border:0;
- border-radius:9px;
- background:#2388f5;
+ border-radius:10px;
  color:white;
- font-size:16px;
  font-weight:bold;
+ font-size:16px;
  cursor:pointer;
 }
+button:active{opacity:.8}
 video{
  width:100%;
  margin-top:20px;
- border-radius:10px;
+ border-radius:12px;
  display:none;
+ background:#000;
 }
 #download{
  display:none;
  margin-top:15px;
- padding:14px;
- background:#16a36a;
+ padding:15px;
+ background:#12a56a;
  color:white;
  text-decoration:none;
- border-radius:9px;
- display:none;
+ border-radius:10px;
+ font-weight:bold;
 }
-.note{font-size:12px;margin-top:25px}
-footer{text-align:center;color:#8090a5;padding:25px}
+#message{font-size:14px}
+.features{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:12px;
+ margin-top:30px;
+}
+.feature{
+ background:#16243b;
+ padding:17px 8px;
+ border-radius:12px;
+ font-size:13px;
+ color:#c6d4e7;
+}
+footer{
+ text-align:center;
+ padding:35px 15px;
+ color:#8493a9;
+ font-size:12px;
+}
+@media(max-width:500px){
+ .hero{margin:45px auto 20px}
+ h1{font-size:30px}
+ .features{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
+
 <header>
- <div class="logo">ALL VIDEO <span>DOWNLOADER</span></div>
+<nav>
+<div class="logo">ALL VIDEO <span>DOWNLOADER</span></div>
+<div style="color:#38a1ff;font-size:12px">FREE TOOL</div>
+</nav>
 </header>
 
-<main>
- <h1>Download Videos Easily</h1>
- <p>Paste a direct video link to preview and download your video.</p>
+<section class="hero">
+<div class="tag">SIMPLE • FAST • EASY</div>
+<h1>Download Videos <span>Online</span></h1>
+<p>Paste a direct video link below to preview and download your video.</p>
 
- <div class="panel">
-  <input id="url" type="url"
-  placeholder="Paste video URL here...">
-  <button onclick="getVideo()">Analyze Video</button>
+<div class="card">
+<input id="url" type="url"
+placeholder="Paste your video URL here...">
+<button onclick="getVideo()">Analyze Video →</button>
 
-  <p id="message"></p>
-  <video id="preview" controls></video>
-  <a id="download" href="#" download="video.mp4">
-  Download Video
-  </a>
- </div>
+<p id="message">Enter a direct MP4 video link to get started.</p>
 
- <p class="note">
- Only use videos you own or have permission to download.
- </p>
-</main>
+<video id="preview" controls></video>
+
+<a id="download" href="#" download="video.mp4">
+Download Video ↓
+</a>
+</div>
+
+<div class="features">
+<div class="feature">⚡ Fast Access</div>
+<div class="feature">📱 Mobile Friendly</div>
+<div class="feature">🎬 MP4 Support</div>
+</div>
+</section>
 
 <footer>
+<p>Only download videos you own or have permission to use.</p>
 © 2026 All Video Downloader
 </footer>
 
@@ -112,6 +162,9 @@ function getVideo(){
  const video=document.getElementById("preview");
  const download=document.getElementById("download");
 
+ video.pause();
+ video.removeAttribute("src");
+ video.load();
  video.style.display="none";
  download.style.display="none";
 
@@ -120,22 +173,38 @@ function getVideo(){
   return;
  }
 
+ let parsed;
  try{
-  const parsed=new URL(url);
-  if(!["http:","https:"].includes(parsed.protocol)){
+  parsed=new URL(url);
+  if(!["http:","https:"].includes(parsed.protocol))
    throw new Error();
-  }
  }catch(e){
-  message.textContent="Please enter a valid video URL.";
+  message.textContent="Please enter a valid URL.";
   return;
  }
+
+ if(!/\.(mp4|webm|ogg)(\?.*)?$/i.test(parsed.pathname+parsed.search)){
+  message.textContent="Please use a direct MP4, WebM or OGG video link.";
+  return;
+ }
+
+ message.textContent="Loading video preview...";
 
  video.src=url;
  video.style.display="block";
  download.href=url;
  download.style.display="block";
- message.textContent="Video link added. Preview or try downloading.";
+
+ video.onerror=function(){
+  message.textContent="Unable to play this video. The link may not allow direct access.";
+  download.style.display="none";
+ };
+ video.onloadedmetadata=function(){
+  message.textContent="Video is ready to preview.";
+ };
+ video.load();
 }
 </script>
+
 </body>
 </html>
